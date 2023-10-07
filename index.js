@@ -26,13 +26,18 @@ let houseEnergyPerHour = 3000 // kw/h потребление ЭЭ домом
 let pumpEnergyPerHour = 150 // kw/h потребление ЭЭ тепловым насосом
 let pumpHeatPerHour = 1 // kw/h скорость передачи ТЭ тепловым насосом
 let heatToC = 3 // kw что-бы нагреть хату на 1 градус 
+let airPumpActive = false // работает ли в конкретный час тепловой насос из атмосферы 
+let genPumpActive = false // работает ли в конкретный час тепловой насос из генератора 
+let solarPumpActive = false // работает ли в конкретный час тепловой насос из панельки 
+let boilerPumpActive = false // работает ли в конкретный час тепловой насос из бойлера 
 console.log(houseControll(
     batterieEnergy, fromHour, toHour, 
     boilerHeat, boilerFuel, boilerHeatPerHour, boilerFuelPerHour, 
     genFuel, genHeat, genHeatPerHour, genFuelPerHour, genEnergyPerHour,
     insideT, outsideT, targetT, 
     solarHeat, solarHeatPerHour, solarGenPerHour,
-    houseEnergyPerHour,pumpEnergyPerHour, pumpHeatPerHour, heatToC
+    houseEnergyPerHour,pumpEnergyPerHour, pumpHeatPerHour, heatToC,
+    airPumpActive, genPumpActive, solarPumpActive, boilerPumpActive
 ))
 
 // app.get('/', (req, res) => {

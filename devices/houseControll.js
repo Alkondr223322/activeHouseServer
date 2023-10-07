@@ -4,7 +4,8 @@ function houseControll(
     genFuel, genHeat, genHeatPerHour, genFuelPerHour, genEnergyPerHour,
     insideT, outsideT, targetT, 
     solarHeat, solarHeatPerHour, solarGenPerHour,
-    houseEnergyPerHour,pumpEnergyPerHour, pumpHeatPerHour, heatToC
+    houseEnergyPerHour,pumpEnergyPerHour, pumpHeatPerHour, heatToC,
+    airPumpActive, genPumpActive, solarPumpActive, boilerPumpActive
 ){
     const getBoilerInfo = require('./boiler')
     const getGeneratorInfo = require('./fuelGenerator')
@@ -14,10 +15,7 @@ function houseControll(
 
     let heatNeeded = Math.abs(targetT - insideT) * heatToC
     let targetHeat = heatNeeded
-    let airPumpActive = false
-    let genPumpActive = false
-    let solarPumpActive = false
-    let boilerPumpActive = false
+
     for(let i = fromHour; i <= toHour; i++){
         if(i > 24){
             i = 1
@@ -134,7 +132,8 @@ function houseControll(
         genFuel, genHeat, genHeatPerHour, genFuelPerHour, genEnergyPerHour,
         insideT, outsideT, targetT, 
         solarHeat, solarHeatPerHour, solarGenPerHour,
-        houseEnergyPerHour,pumpEnergyPerHour, pumpHeatPerHour, heatToC
+        houseEnergyPerHour,pumpEnergyPerHour, pumpHeatPerHour, heatToC,
+        airPumpActive, genPumpActive, solarPumpActive, boilerPumpActive
     }
 }
 
