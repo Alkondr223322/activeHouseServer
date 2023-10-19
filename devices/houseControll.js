@@ -5,7 +5,9 @@ function houseControll(
     insideT, outsideT, targetT, 
     solarHeat, solarHeatPerHour, solarGenPerHour,
     houseEnergyPerHour,pumpEnergyPerHour, pumpHeatPerHour, heatToC,
-    airPumpActive, genPumpActive, solarPumpActive, boilerPumpActive
+    airPumpActive, genPumpActive, solarPumpActive, boilerPumpActive,
+    azimuthAngle, solarX, solarZ, groundAngle, sunAngle, timeZone, month, region, cloudiness, albedo, day,
+    Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd
 ){
     const getBoilerInfo = require('./boiler')
     const getGeneratorInfo = require('./fuelGenerator')
@@ -39,7 +41,10 @@ function houseControll(
             houseEnergyPerHour -= pumpEnergyPerHour
             boilerPumpActive = false
         }
-        let solarInfo = getSolarInfo(i, solarGenPerHour, solarHeatPerHour)
+        let solarInfo = getSolarInfo(i, solarGenPerHour, solarHeatPerHour, azimuthAngle, solarX, solarZ, 
+            groundAngle, sunAngle, timeZone, month, region, cloudiness, albedo, day,
+            Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd)
+        console.log(i)
         console.log(solarInfo)
         // нагрели панельку
         solarHeat += solarInfo.solarHeatProduction
@@ -133,7 +138,9 @@ function houseControll(
         insideT, outsideT, targetT, 
         solarHeat, solarHeatPerHour, solarGenPerHour,
         houseEnergyPerHour,pumpEnergyPerHour, pumpHeatPerHour, heatToC,
-        airPumpActive, genPumpActive, solarPumpActive, boilerPumpActive
+        airPumpActive, genPumpActive, solarPumpActive, boilerPumpActive,
+        azimuthAngle, solarX, solarZ, groundAngle, sunAngle, timeZone, month, region, cloudiness, albedo, day,
+        Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd
     }
 }
 
