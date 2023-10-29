@@ -3,11 +3,14 @@ function houseControll(
     boilerHeat, boilerFuel, boilerHeatPerHour, boilerFuelPerHour, 
     genFuel, genHeat, genHeatPerHour, genFuelPerHour, genEnergyPerHour,
     insideT, outsideT, targetT, 
-    solarHeat, solarHeatPerHour, solarGenPerHour,
+    solarHeat, 
+    //solarHeatPerHour, solarGenPerHour,
     houseEnergyPerHour,pumpEnergyPerHour, pumpHeatPerHour, heatToC,
     airPumpActive, genPumpActive, solarPumpActive, boilerPumpActive,
     azimuthAngle, solarX, solarZ, groundAngle, sunAngle, timeZone, month, region, cloudiness, albedo, day,
-    Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd
+    Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd,
+    batterieHistory, genHistory, boilerHistory, solarPanelHistory, solarCollectorHistory,
+    airPumpHistory, genPumpHistory, solarPumpHistory, boilerPumpHistory, houseConsumptionHistory, houseTempHistory
 ){
     const getBoilerInfo = require('./boiler')
     const getGeneratorInfo = require('./fuelGenerator')
@@ -21,8 +24,11 @@ function houseControll(
     for(let i = fromHour; i <= toHour; i++){
         if(i > 24){
             i = 1
+            day++
         }
         let invertorInfo = getInvertorInfo(i, houseEnergyPerHour)
+        let generatorInfo = null // null если не используем генератор, object если да 
+        let boilerInfo = null //null если не используем бойлер, object если да 
         console.log(invertorInfo)
         // если в прошлый час отработал тепловой насос, отнимаем его потребление от общего 
         if(airPumpActive){
@@ -41,13 +47,16 @@ function houseControll(
             houseEnergyPerHour -= pumpEnergyPerHour
             boilerPumpActive = false
         }
-        let solarInfo = getSolarInfo(i, solarGenPerHour, solarHeatPerHour, azimuthAngle, solarX, solarZ, 
+        let solarInfo = getSolarInfo(i, 
+            //solarGenPerHour, solarHeatPerHour, 
+            azimuthAngle, solarX, solarZ, 
             groundAngle, sunAngle, timeZone, month, region, cloudiness, albedo, day,
             Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd)
         console.log(i)
         console.log(solarInfo)
         // нагрели панельку
         solarHeat += solarInfo.solarHeatProduction
+
         // если есть излишек - зарядили батарейки
         if (solarInfo.solarEnergyProduction > invertorInfo.houseConsumptionSpeed){
             batterieEnergy += solarInfo.solarEnergyProduction - invertorInfo.houseConsumptionSpeed
@@ -56,8 +65,9 @@ function houseControll(
             batterieEnergy -= invertorInfo.houseConsumptionSpeed
         // если батарейки не хватает - запускаем генератор
         }else{
-            let generatorInfo = getGeneratorInfo(i, i+1, genEnergyPerHour, genFuelPerHour, genHeatPerHour)
+            generatorInfo = getGeneratorInfo(i, i+1, genEnergyPerHour, genFuelPerHour, genHeatPerHour)
             console.log(generatorInfo)
+            genHistory.push(generatorInfo)
             // потребили топливо
             genFuel-= generatorInfo.generatorFuelConsumed
             // нагрели генератор
@@ -97,7 +107,7 @@ function houseControll(
             }
             // если нужно, включаем бойлер
             if(boilerHeat < pumpHeatPerHour && heatNeeded > 0){
-                let boilerInfo = getBoilerInfo(i, i+1, boilerHeatPerHour, boilerFuelPerHour)
+                boilerInfo = getBoilerInfo(i, i+1, boilerHeatPerHour, boilerFuelPerHour)
                 console.log(boilerInfo)
                 boilerHeat += boilerInfo.totalBoilerHeatProduction
                 boilerFuel -= boilerInfo.boilerFuelConsumed
@@ -123,6 +133,25 @@ function houseControll(
         if(boilerPumpActive){
             houseEnergyPerHour += pumpEnergyPerHour
         }
+
+        solarCollectorHistory.push(solarHeat)
+        solarPanelHistory.push(solarInfo.solarEnergyProduction)
+        batterieHistory.push(batterieEnergy)
+        houseConsumptionHistory.push(invertorInfo)
+        airPumpHistory.push(airPumpActive)
+        genPumpHistory.push(genPumpActive)
+        solarPumpHistory.push(solarPumpActive)
+        boilerPumpHistory.push(boilerPumpActive)
+        genHistory.push(generatorInfo)
+        boilerHistory.push(boilerInfo)
+        let resultHeat = (targetHeat - heatNeeded) / heatToC // C
+        if(targetT < insideT){
+            houseTempHistory.push(insideT -= resultHeat)
+        }else if(targetT > insideT){
+            houseTempHistory.push(insideT += resultHeat)
+        }
+
+        
     }
     // переводим тепло обратно в градусы
     let resultHeat = (targetHeat - heatNeeded) / heatToC // C
@@ -131,16 +160,20 @@ function houseControll(
     }else if(targetT > insideT){
         insideT += resultHeat
     }
+    console.log("__________________________________________________________________________________________________________________________________________________")
     return {
         batterieEnergy, fromHour, toHour, 
         boilerHeat, boilerFuel, boilerHeatPerHour, boilerFuelPerHour, 
         genFuel, genHeat, genHeatPerHour, genFuelPerHour, genEnergyPerHour,
         insideT, outsideT, targetT, 
-        solarHeat, solarHeatPerHour, solarGenPerHour,
+        solarHeat, 
+        //solarHeatPerHour, solarGenPerHour,
         houseEnergyPerHour,pumpEnergyPerHour, pumpHeatPerHour, heatToC,
         airPumpActive, genPumpActive, solarPumpActive, boilerPumpActive,
         azimuthAngle, solarX, solarZ, groundAngle, sunAngle, timeZone, month, region, cloudiness, albedo, day,
-        Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd
+        Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd,
+        batterieHistory, genHistory, boilerHistory, solarPanelHistory, solarCollectorHistory,
+        airPumpHistory, genPumpHistory, solarPumpHistory, boilerPumpHistory, houseConsumptionHistory, houseTempHistory
     }
 }
 

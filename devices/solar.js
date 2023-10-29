@@ -13,7 +13,9 @@ function getSolarCollectorInfo(power, kkd){
     return {solarHeatProduction}
 }
 
-function getSolarInfo(hour, genPerHour, heatPerHour,  azimuthAngle, solarX, solarZ, 
+function getSolarInfo(hour, 
+    //genPerHour, heatPerHour,  
+    azimuthAngle, solarX, solarZ, 
     groundAngle, sunAngle, timeZone, month, region, cloudiness, albedo, day,
     Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd){
     const getEff = require('./getEff')

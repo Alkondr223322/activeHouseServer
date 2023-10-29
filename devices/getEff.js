@@ -51,10 +51,10 @@ function eff(hour, azimuthAngle, solarX, solarZ,
   //console.log('hourSunAngle ' + hourSunAngle)
   let sunRayAngle = Math.acos(Math.abs((A - B) * Math.sin(dgr(sunAngle)) + Math.abs(C * Math.sin(dgr(hourSunAngle)) + (D + E) * Math.cos(dgr(hourSunAngle))) * Math.cos(dgr(sunAngle))))
   let sunZenithAngle = Math.acos(Math.abs(Math.sin(dgr(sunAngle)) * Math.sin(dgr(solarX)) +  Math.cos(dgr(sunAngle)) * Math.cos(dgr(solarX)) * Math.cos(dgr(hourSunAngle))))
-  console.log('sunRayAngle ' + sunRayAngle)
-  console.log('sunZenithAngle ' + sunZenithAngle)
+  //console.log('sunRayAngle ' + sunRayAngle)
+  //console.log('sunZenithAngle ' + sunZenithAngle)
   let Ibysum = IGorPr * Math.cos(sunRayAngle) / Math.cos(sunZenithAngle) + IGorRoz * (1 + Math.cos(dgr(groundAngle))) / 2 + albedo * IGorSum * (1 - Math.cos(dgr(groundAngle))) / 2
-  console.log('cos/cos ' + Math.cos(sunRayAngle) / Math.cos(sunZenithAngle))
+  //console.log('cos/cos ' + Math.cos(sunRayAngle) / Math.cos(sunZenithAngle))
   let FF = Impp * Vmpp / (Isc * Voc)
   let CFF = (FF * Tref / Gref) * ((Math.abs(Isc + ki * (Tfm - Tref)) * Math.abs(Isc + kv * (Tfm - Tref))) / Math.log(Math.pow(10, 6) * Gref))
   let result = CFF * Ibysum * Math.log(Math.pow(10, 6) * Ibysum) / Tfm
