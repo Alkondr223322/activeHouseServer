@@ -146,9 +146,9 @@ function houseControll(
         boilerHistory.push(boilerInfo)
         let resultHeat = (targetHeat - heatNeeded) / heatToC // C
         if(targetT < insideT){
-            houseTempHistory.push(insideT -= resultHeat)
+            houseTempHistory.push(insideT - resultHeat)
         }else if(targetT > insideT){
-            houseTempHistory.push(insideT += resultHeat)
+            houseTempHistory.push(insideT + resultHeat)
         }
 
         
