@@ -70,12 +70,14 @@ let houseTempHistory = [] // температура в доме в каждый 
 let C = 0.3//*в залежності від типу вітряка* 
 let M = 29 // г/моль
 let h = 10 // висота установки
-let v0 = 4 // м/с відома швидкість вітру на висоті h0
+let v0 = [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1] // м/с відома швидкість вітру на висоті h0
 let alpha = 0.2 // коеф
 let A = 4 // м^2 – площа перетину ротора вітроустановки
 let windGenHistory = [] // состояние ветрогенератора в каждый час симуляции
 let h0 = 5 // м
 let P = 20 // тиск атмосферний 
+let houseEnergyConsumptionTable = [0, 1000, 2000, 3000, 4000, 5000, 6000, 5000, 4000, 3000, 2000, 1000, 0, 1000, 2000, 3000, 4000, 5000, 6000, 5000, 4000, 3000, 2000, 1000]
+let houseHeatConsumptionTable = [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1] // kw получаемые/тяремые домом от атмосферы
 
 
 console.log(houseControll(
@@ -91,7 +93,8 @@ console.log(houseControll(
     Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd,
     batterieHistory, genHistory, boilerHistory, solarPanelHistory, solarCollectorHistory,
     airPumpHistory, genPumpHistory, solarPumpHistory, boilerPumpHistory, houseConsumptionHistory, houseTempHistory,
-    C, M, h, v0, alpha, A, windGenHistory, h0, P
+    C, M, h, v0, alpha, A, windGenHistory, h0, P, 
+    houseEnergyConsumptionTable, houseHeatConsumptionTable
 ))
 
 // app.get('/', (req, res) => {

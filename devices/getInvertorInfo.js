@@ -1,4 +1,5 @@
 // Инвертор (потребление ЭЭ всех остальных приборов в хате, суммарное потребление за промежуток)
+// зараз не використовується 
 
 function getInvertorInfo(hour, consumptionPerHour){ 
     const getHouseActivity = require('./getHouseActivity')
