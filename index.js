@@ -67,6 +67,17 @@ let solarPumpHistory = [] // история работы теплового на
 let boilerPumpHistory = [] // история работы теплового насоса из бойлера 
 let houseConsumptionHistory = [] // потребление энергии домом в каждый час симуляции
 let houseTempHistory = [] // температура в доме в каждый час симуляции
+let C = 0.3//*в залежності від типу вітряка* 
+let M = 29 // г/моль
+let h = 10 // висота установки
+let v0 = 4 // м/с відома швидкість вітру на висоті h0
+let alpha = 0.2 // коеф
+let A = 4 // м^2 – площа перетину ротора вітроустановки
+let windGenHistory = [] // состояние ветрогенератора в каждый час симуляции
+let h0 = 5 // м
+let P = 20 // тиск атмосферний 
+
+
 console.log(houseControll(
     batterieEnergy, fromHour, toHour, 
     boilerHeat, boilerFuel, boilerHeatPerHour, boilerFuelPerHour, 
@@ -79,7 +90,8 @@ console.log(houseControll(
     azimuthAngle, solarX, solarZ, groundAngle, sunAngle, timeZone, month, region, cloudiness, albedo, day,
     Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd,
     batterieHistory, genHistory, boilerHistory, solarPanelHistory, solarCollectorHistory,
-    airPumpHistory, genPumpHistory, solarPumpHistory, boilerPumpHistory, houseConsumptionHistory, houseTempHistory
+    airPumpHistory, genPumpHistory, solarPumpHistory, boilerPumpHistory, houseConsumptionHistory, houseTempHistory,
+    C, M, h, v0, alpha, A, windGenHistory, h0, P
 ))
 
 // app.get('/', (req, res) => {

@@ -10,13 +10,15 @@ function houseControll(
     azimuthAngle, solarX, solarZ, groundAngle, sunAngle, timeZone, month, region, cloudiness, albedo, day,
     Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd,
     batterieHistory, genHistory, boilerHistory, solarPanelHistory, solarCollectorHistory,
-    airPumpHistory, genPumpHistory, solarPumpHistory, boilerPumpHistory, houseConsumptionHistory, houseTempHistory
+    airPumpHistory, genPumpHistory, solarPumpHistory, boilerPumpHistory, houseConsumptionHistory, houseTempHistory,
+    C, M, h, v0, alpha, A, windGenHistory, h0, P
 ){
     const getBoilerInfo = require('./boiler')
     const getGeneratorInfo = require('./fuelGenerator')
     const getInvertorInfo = require('./getInvertorInfo')
     const getSolarInfo = require('./solar')
     const getheatPumpInfo = require('./heatPump')
+    const getWindGenInfo = require('./windGen')
 
     let heatNeeded = Math.abs(targetT - insideT) * heatToC
     let targetHeat = heatNeeded
@@ -57,12 +59,15 @@ function houseControll(
         // нагрели панельку
         solarHeat += solarInfo.solarHeatProduction
 
+        let windGenInfo = getWindGenInfo(C, M, h, v0, alpha, A, outsideT, h0, P)
+
+
         // если есть излишек - зарядили батарейки
-        if (solarInfo.solarEnergyProduction > invertorInfo.houseConsumptionSpeed){
-            batterieEnergy += solarInfo.solarEnergyProduction - invertorInfo.houseConsumptionSpeed
-        // если панельки н ехватает - берем из батарейки
+        if (solarInfo.solarEnergyProduction + windGenInfo.windEnergyProduction > invertorInfo.houseConsumptionSpeed){
+            batterieEnergy += solarInfo.solarEnergyProduction - invertorInfo.houseConsumptionSpeed + windGenInfo.windEnergyProduction
+        // если панельки и ветра не хватает - берем из батарейки
         }else if(batterieEnergy > invertorInfo.houseConsumptionSpeed){
-            batterieEnergy -= invertorInfo.houseConsumptionSpeed
+            batterieEnergy -= (invertorInfo.houseConsumptionSpeed - solarInfo.solarEnergyProduction - windGenInfo.windEnergyProduction)
         // если батарейки не хватает - запускаем генератор
         }else{
             generatorInfo = getGeneratorInfo(i, i+1, genEnergyPerHour, genFuelPerHour, genHeatPerHour)
@@ -144,6 +149,7 @@ function houseControll(
         boilerPumpHistory.push(boilerPumpActive)
         genHistory.push(generatorInfo)
         boilerHistory.push(boilerInfo)
+        windGenHistory.push(windGenInfo)
         let resultHeat = (targetHeat - heatNeeded) / heatToC // C
         if(targetT < insideT){
             houseTempHistory.push(insideT - resultHeat)
@@ -173,7 +179,8 @@ function houseControll(
         azimuthAngle, solarX, solarZ, groundAngle, sunAngle, timeZone, month, region, cloudiness, albedo, day,
         Tref, Gref, ki, kv, Impp, Vmpp, Isc, Voc, Tfm, kkd,
         batterieHistory, genHistory, boilerHistory, solarPanelHistory, solarCollectorHistory,
-        airPumpHistory, genPumpHistory, solarPumpHistory, boilerPumpHistory, houseConsumptionHistory, houseTempHistory
+        airPumpHistory, genPumpHistory, solarPumpHistory, boilerPumpHistory, houseConsumptionHistory, houseTempHistory,
+        C, M, h, v0, alpha, A, windGenHistory, h0, P
     }
 }
 
