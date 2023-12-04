@@ -1,3 +1,5 @@
+// Igorsum за даними NASA по регіону та місяцю
+
 const insolation = [[1.27, 2.06, 3.05, 4.30, 5.44, 5.84, 6.20, 5.34, 4.07, 2.67, 1.55, 1.07, 3.58],
 [1.07, 1.89, 2.94, 3.92, 5.19, 5.3, 5.16, 4.68, 3.21, 1.97, 1.10, 0.9, 3.11],
 [1.02, 1.77, 2.83, 3.91, 5.05, 5.08, 4.94, 4.55, 3.01, 1.83, 1.05, 0.79, 2.99],
@@ -46,8 +48,15 @@ function eff(hour, azimuthAngle, solarX, solarZ,
 
   let TuvB = 0.986 * day - 79.866
   let Tuv = 0.11 * Math.sin(dgr(2 * TuvB)) - 0.08 * Math.cos(dgr(TuvB)) - Math.sin(dgr(TuvB))
-
-  let hourSunAngle = 15 * (hour - 12 - Tuv - timeZone) + solarZ
+  let hourSunAngle = 0
+  let calcHour = hour - 12
+  hourSunAngle = 15 * (calcHour - Tuv - timeZone) + solarZ
+  // if(hour >= 12){
+  //   hourSunAngle = 15 * (calcHour - Tuv - timeZone) + solarZ
+  // }else{
+  //   hourSunAngle = 15 * (calcHour - 12 - Tuv - timeZone) + solarZ
+  // }
+  
   //console.log('hourSunAngle ' + hourSunAngle)
   let sunRayAngle = Math.acos(Math.abs((A - B) * Math.sin(dgr(sunAngle)) + Math.abs(C * Math.sin(dgr(hourSunAngle)) + (D + E) * Math.cos(dgr(hourSunAngle))) * Math.cos(dgr(sunAngle))))
   let sunZenithAngle = Math.acos(Math.abs(Math.sin(dgr(sunAngle)) * Math.sin(dgr(solarX)) +  Math.cos(dgr(sunAngle)) * Math.cos(dgr(solarX)) * Math.cos(dgr(hourSunAngle))))
