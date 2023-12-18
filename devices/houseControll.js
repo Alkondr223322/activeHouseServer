@@ -105,23 +105,23 @@ function houseControll(
         }
 
         // пассивно теряем/получаем тепло
-        // let passiveHeatConsumption = houseHeatConsumptionTable[i]
-        // if(insideT > outsideT){
-        //     insideT -= passiveHeatConsumption / heatToC
-        // }else if (insideT < outsideT){
-        //     insideT += passiveHeatConsumption / heatToC
-        // }
+        let passiveHeatConsumption = houseHeatConsumptionTable[i]
+        if(insideT > outsideT){
+            insideT -= passiveHeatConsumption / heatToC
+        }else if (insideT < outsideT){
+            insideT += passiveHeatConsumption / heatToC
+        }
 
         // если нужно охладить хату, и снаружи температура ниже 
         if(insideT > targetT){ // insideT > outsideT && insideT > targetT
-            airPump = getVentPumpInfo(i, i+1, ventEnergyPerHour, peopleInHouse, airPerPerson, ventPumpEff, insideT, outsideT)
+            airPump = getVentPumpInfo(i, i+1, ventEnergyPerHour, peopleInHouse, airPerPerson, ventPumpEff, insideT, outsideT, heatToC, targetT)
             airPumpActive = true
             insideT -= airPump.pumpHeatProduced / heatToC
         // если нужно греться
         }else if(insideT < targetT){
             // греемся от атмосферы
             if(insideT < targetT){ // insideT < outsideT && insideT < targetT
-                airPump = getVentPumpInfo(i, i+1, ventEnergyPerHour, peopleInHouse, airPerPerson, ventPumpEff, insideT, outsideT)
+                airPump = getVentPumpInfo(i, i+1, ventEnergyPerHour, peopleInHouse, airPerPerson, ventPumpEff, insideT, outsideT, heatToC, targetT)
                 airPumpActive = true
                 insideT += airPump.pumpHeatProduced / heatToC
             }

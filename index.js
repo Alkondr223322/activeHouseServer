@@ -9,7 +9,7 @@ function dgr(degrees) // градус в радиан
 }
 
 const houseControll = require('./devices/houseControll')
-let batterieEnergy = 80 // kw ЭЭ в батарейках 
+let batterieEnergy = 8 // kw ЭЭ в батарейках 
 let fromHour = 1 // h время начала симуляции 
 let toHour = 24 // h время конца симуляции 
 let boilerHeat = 0 // kw ТЭ в бойлере 
